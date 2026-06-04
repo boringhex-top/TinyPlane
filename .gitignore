@@ -42,3 +42,7 @@ Project Logs for*
 Footprints/History
 Symbols/History
 *.Zip
+
+# Build artifacts
+firmware/build/
+firmware/test/build/

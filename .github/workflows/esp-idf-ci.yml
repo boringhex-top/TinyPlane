@@ -1,0 +1,42 @@
+name: ESP-IDF Build and Test
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build Firmware
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:release-v5.1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build with ESP-IDF
+        run: |
+          . $IDF_PATH/export.sh
+          cd firmware
+          idf.py set-target esp32c3
+          idf.py build
+
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install CMake and GCC
+        run: sudo apt-get update && sudo apt-get install -y cmake gcc
+
+      - name: Build and Run Tests
+        run: |
+          cd firmware/test
+          mkdir build && cd build
+          cmake ..
+          make
+          ./run_tests
