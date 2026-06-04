@@ -80,8 +80,19 @@ void hardware_init(void) {
 
 void motor_set_pwm(int m1_duty, int m2_duty) {
     // 10-bit duty: 0-1023
-    if (m1_duty < 0) m1_duty = 0; if (m1_duty > 1023) m1_duty = 1023;
-    if (m2_duty < 0) m2_duty = 0; if (m2_duty > 1023) m2_duty = 1023;
+    if (m1_duty < 0) {
+        m1_duty = 0;
+    }
+    if (m1_duty > 1023) {
+        m1_duty = 1023;
+    }
+
+    if (m2_duty < 0) {
+        m2_duty = 0;
+    }
+    if (m2_duty > 1023) {
+        m2_duty = 1023;
+    }
 
     ledc_set_duty(LEDC_MODE, LEDC_CH_M1, m1_duty);
     ledc_update_duty(LEDC_MODE, LEDC_CH_M1);

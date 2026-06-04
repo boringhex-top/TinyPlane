@@ -11,7 +11,7 @@ jobs:
     name: Build Firmware
     runs-on: ubuntu-latest
     container:
-      image: espressif/idf:release-v5.1
+      image: espressif/idf:release-v5.4
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
