@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Cache ccache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .ccache
           key: ccache-${{ runner.os }}-esp32c3-${{ github.sha }}
@@ -28,7 +28,7 @@ jobs:
         env:
           IDF_CCACHE_ENABLE: 1
           CCACHE_DIR: ${{ github.workspace }}/.ccache
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build with ESP-IDF
         run: |
@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload Firmware Artifacts
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tiny-plane-firmware
           path: |
