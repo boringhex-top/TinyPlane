@@ -16,7 +16,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ccache-${{ runner.os }}-esp32c3-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ runner.os }}-esp32c3-
+
       - name: Build with ESP-IDF
+        env:
+          IDF_CCACHE_ENABLE: 1
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
         run: |
           . $IDF_PATH/export.sh
           cd firmware
