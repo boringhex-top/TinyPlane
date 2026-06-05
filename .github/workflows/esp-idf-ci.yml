@@ -14,6 +14,20 @@ jobs:
       image: espressif/idf:release-v5.4
     steps:
       - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ccache-${{ runner.os }}-esp32c3-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ runner.os }}-esp32c3-
+
+      - name: Build with ESP-IDF
+        env:
+          IDF_CCACHE_ENABLE: 1
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
         uses: actions/checkout@v4
 
       - name: Build with ESP-IDF
@@ -23,12 +37,24 @@ jobs:
           idf.py set-target esp32c3
           idf.py build
 
+      - name: Upload Firmware Artifacts
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiny-plane-firmware
+          path: |
+            firmware/build/tiny_plane_fc.bin
+            firmware/build/tiny_plane_fc.elf
+            firmware/build/bootloader/bootloader.bin
+            firmware/build/partition_table/partition-table.bin
+            firmware/build/flasher_args.json
+
   test:
     name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install CMake and GCC
         run: sudo apt-get update && sudo apt-get install -y cmake gcc
