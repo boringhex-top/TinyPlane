@@ -28,6 +28,9 @@ jobs:
         env:
           IDF_CCACHE_ENABLE: 1
           CCACHE_DIR: ${{ github.workspace }}/.ccache
+        uses: actions/checkout@v4
+
+      - name: Build with ESP-IDF
         run: |
           . $IDF_PATH/export.sh
           cd firmware
